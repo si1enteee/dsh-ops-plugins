@@ -75,6 +75,18 @@ export const name = 'ops-access'
 
 export const inject = ['tools']
 
+// dsh ≥ 0.2 removed the catch-all `plugin` message source; each producer
+// declares its own `kind` in the shared MessageSourceMap (merge-extensible).
+declare module '@deepseek-ai/dsh-llm' {
+  interface MessageSourceMap {
+    /** The envelope-context message ops-access appends after a cited user message. */
+    'ops-access': {
+      kind: 'ops-access'
+      form: 'recall'
+    }
+  }
+}
+
 // ── Config ───────────────────────────────────────────────────────────────────
 
 // The Config interface stays here (not in types.ts): it declaration-merges
@@ -1232,7 +1244,7 @@ export function apply(ctx: Context, config: Config): void {
       changed = true
       out.push(freezeMessage({ ...message, content }))
       out.push(createUserMessage({
-        source: { kind: 'plugin', plugin: name, form: 'recall' },
+        source: { kind: 'ops-access', form: 'recall' },
         content: [{ type: 'text', text: await renderAccessReferences(handle, providers, references) }],
       }))
     }

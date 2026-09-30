@@ -82,17 +82,21 @@ function setup(opts: {
     shell: {
       ...(opts.sandboxMode !== undefined ? { sandboxMode: opts.sandboxMode } : {}),
       resolve: (request: any) => { shellRequests.push(request); return { ...request } },
-      run: async (spec: any) => {
+      execute: async (spec: any) => {
         calls.shellRun++
-        const outcome = await (opts.runImpl ?? (async () => ({ exitCode: 0, stdoutText: 'ok\n', stderrText: '' })))(spec)
         return {
-          exitCode: outcome.exitCode,
-          timedOut: outcome.timedOut,
-          aborted: outcome.aborted,
-          timeoutMs: outcome.timeoutMs,
-          signal: outcome.signal,
-          stdout: { text: outcome.stdoutText },
-          stderr: { text: outcome.stderrText },
+          result: async () => {
+            const outcome = await (opts.runImpl ?? (async () => ({ exitCode: 0, stdoutText: 'ok\n', stderrText: '' })))(spec)
+            return {
+              exitCode: outcome.exitCode,
+              timedOut: outcome.timedOut,
+              aborted: outcome.aborted,
+              timeoutMs: outcome.timeoutMs,
+              signal: outcome.signal,
+              stdout: { text: outcome.stdoutText },
+              stderr: { text: outcome.stderrText },
+            }
+          },
         }
       },
     },

@@ -55,6 +55,19 @@ export const name = 'ops-access-gate'
 
 export const inject = ['tools']
 
+// dsh ≥ 0.2 removed the catch-all `plugin` message source; each producer
+// declares its own `kind` in the shared MessageSourceMap (merge-extensible).
+declare module '@deepseek-ai/dsh-llm' {
+  interface MessageSourceMap {
+    /** A grant-change notice injected by the ops-access gate at a pre-step boundary. */
+    'ops-access-gate': {
+      kind: 'ops-access-gate'
+      form: 'notice'
+      summary: string
+    }
+  }
+}
+
 // ── Config ───────────────────────────────────────────────────────────────────
 
 // The Config interface merges with the schemastery const of the same name
@@ -779,7 +792,7 @@ export function apply(ctx: Context, config: Config): void {
       notices.delete(agent.id)
       agent.inject(createUserMessage({
         content: [{ type: 'text', text: queued.join('\n') }],
-        source: { kind: 'plugin', plugin: name, form: 'notice', summary: 'access grant change' },
+        source: { kind: 'ops-access-gate', form: 'notice', summary: 'access grant change' },
       }))
       return decision
     },

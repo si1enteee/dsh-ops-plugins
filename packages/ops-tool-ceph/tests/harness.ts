@@ -54,18 +54,22 @@ export function setup(opts: {
         shellRequests.push(request)
         return { workdir: '/tmp', stdoutMaxBytes: 1024 * 1024, sandboxPolicy: undefined, ...request }
       },
-      run: async (spec: any) => {
+      execute: async (spec: any) => {
         calls.shellRun++
         shellRuns.push(spec)
-        const outcome = await (opts.runImpl ?? (async () => ({ exitCode: 0, stdoutText: 'HEALTH_OK\n', stderrText: '' })))(spec)
         return {
-          exitCode: outcome.exitCode,
-          signal: null,
-          timedOut: false,
-          aborted: false,
-          timeoutMs: spec.timeoutMs,
-          stdout: { text: outcome.stdoutText },
-          stderr: { text: outcome.stderrText },
+          result: async () => {
+            const outcome = await (opts.runImpl ?? (async () => ({ exitCode: 0, stdoutText: 'HEALTH_OK\n', stderrText: '' })))(spec)
+            return {
+              exitCode: outcome.exitCode,
+              signal: null,
+              timedOut: false,
+              aborted: false,
+              timeoutMs: spec.timeoutMs,
+              stdout: { text: outcome.stdoutText },
+              stderr: { text: outcome.stderrText },
+            }
+          },
         }
       },
     },

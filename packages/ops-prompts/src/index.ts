@@ -27,6 +27,19 @@ export type { MethodologyEntry, OpsPromptsHandle, ReminderEntry } from './types.
 
 export const name = 'ops-prompts'
 
+// dsh ≥ 0.2 removed the catch-all `plugin` message source; each producer
+// declares its own `kind` in the shared MessageSourceMap (merge-extensible).
+declare module '@deepseek-ai/dsh-llm' {
+  interface MessageSourceMap {
+    /** A dynamic ops reminder injected by the ops-prompts plugin. */
+    'ops-prompts': {
+      kind: 'ops-prompts'
+      form: 'notice'
+      summary: string
+    }
+  }
+}
+
 export const inject = ['systemPrompt']
 
 // ── Config ───────────────────────────────────────────────────────────────────
@@ -147,7 +160,7 @@ export function apply(ctx: Context, config: Config): void {
 
       agent.inject(createUserMessage({
         content: [{ type: 'text', text: results.join('\n') }],
-        source: { kind: 'plugin', plugin: name, form: 'notice', summary: 'ops reminder' },
+        source: { kind: 'ops-prompts', form: 'notice', summary: 'ops reminder' },
       }))
       return decision
     }, { prepend: true })

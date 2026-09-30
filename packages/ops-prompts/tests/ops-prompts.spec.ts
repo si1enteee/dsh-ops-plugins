@@ -114,7 +114,7 @@ describe('reminder delivery', () => {
     expect(injected).toHaveLength(1)
     expect(injected[0].role).toBe('user')
     expect(injected[0].content[0].text).toBe('NAG')
-    expect(injected[0].source).toMatchObject({ kind: 'plugin', plugin: 'ops-prompts', form: 'notice' })
+    expect(injected[0].source).toMatchObject({ kind: 'ops-prompts', form: 'notice' })
   })
 
   it('joins multiple fired rules into one notice', async () => {

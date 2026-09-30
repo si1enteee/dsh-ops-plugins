@@ -274,8 +274,12 @@ export function registerProfiledShellTool(ctx: Context, spec: ProfiledShellToolS
           sandboxPolicy = policyService.resolve(session !== undefined ? { session } : {})
         }
         const request: ShellExecRequest = { command: tokens.executable(fullCommand), timeoutMs, signal: exec.signal, ...(sandboxPolicy !== undefined ? { sandboxPolicy } : {}) }
-        const resolved = ctx.shell.resolve(request)
-        const result = await ctx.shell.run(resolved)
+        // dsh ≥ 0.2 split the old `shell.run(spec)` into `resolve` (fill/cap
+        // the spec) + `execute` (spawn, returning a live handle); the
+        // foreground outcome is the handle's memoized `result()` projection.
+        const execSpec = ctx.shell.resolve(request)
+        const execution = await ctx.shell.execute(execSpec)
+        const result = await execution.result()
         // exitCode is null when the process died from a signal — normalize to
         // -1, and the kill's cause is always surfaced in the error field so
         // the model never has to guess WHY there is no exit code — a bare -1

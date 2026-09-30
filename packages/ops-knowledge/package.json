@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "@elinpf/dsh-ops-knowledge",
   "version": "0.4.1",
   "description": "Troubleshooting knowledge base for ops mode — distilled postmortem cases stored in the access hub, searched before diagnosing and recorded after resolving.",
@@ -32,16 +32,16 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@deepseek-ai/schemastery": "^3.18.1"
+    "@deepseek-ai/schemastery": "~3.18.4"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-tools": "^0.1.0-rc.8",
+    "@deepseek-ai/cordis": "~4.0.4",
+    "@deepseek-ai/dsh-tools": "^0.2.0-rc.2",
     "@elinpf/dsh-ops-prompts": "^0.4.1"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "4.0.1",
-    "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
+    "@deepseek-ai/cordis": "4.0.4",
+    "@deepseek-ai/dsh-tools": "0.2.0-rc.2",
     "@elinpf/dsh-ops-access-hub": "workspace:*",
     "@elinpf/dsh-ops-prompts": "workspace:*",
     "@elinpf/dsh-ops-test-support": "workspace:*",
