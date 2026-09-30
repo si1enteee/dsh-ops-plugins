@@ -1,5 +1,14 @@
 # @elinpf/dsh-ops-tool-kubectl
 
+## 0.4.2
+
+### Patch Changes
+
+- 050b7db: 兼容 DeepSeek Harness 0.2.0-rc.2（含桌面端）。全部 dsh 依赖升到 0.2.0-rc.2 / cordis 4.0.4 / schemastery 3.18.4；适配 API 变更：消息来源不再有通用 `plugin` kind（各插件改用自己的 `MessageSourceMap` 声明）、`ctx.shell.run` 拆为 `resolve` + `execute().result()`；preset 里已下线的 `dsh-workflow-worker-thread` 换成 `dsh-workflow-ptc`，persona 行改用 `prefix`。
+- Updated dependencies [050b7db]
+  - @elinpf/dsh-ops-access@0.4.2
+  - @elinpf/dsh-ops-shell-tool@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes
