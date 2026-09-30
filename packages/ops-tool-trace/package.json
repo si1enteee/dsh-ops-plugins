@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@elinpf/dsh-ops-tool-trace",
   "version": "0.4.1",
   "description": "Investigation tree tool for ops mode — replaces todo_write with a diverge-converge tree of steps, milestones, dead ends, and a resolved terminal.",

@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@elinpf/dsh-ops-access-ssh",
   "version": "0.4.1",
   "description": "Ops access provider for SSH — validates ssh registry entries and expands key paths.",

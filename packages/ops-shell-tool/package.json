@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@elinpf/dsh-ops-shell-tool",
   "version": "0.4.1",
   "description": "Shared factory for ops-access consumer tools: standard shell result shape, output schema, render, and the resolve-per-call execute template.",

@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@elinpf/dsh-ops-access-ceph",
   "version": "0.4.1",
   "description": "Ops access provider for Ceph — validates ceph registry entries and expands conf/keyring paths.",

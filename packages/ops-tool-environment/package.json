@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@elinpf/dsh-ops-tool-environment",
   "version": "0.4.1",
   "description": "Environment inventory for ops mode — read-only scanner that maps registered k8s clusters (workloads, services, middleware instances, best-effort relation edges) into ~/.dsh-ops/environment.yaml, plus the model-facing environment tool (overview/show/refresh). Deterministic code only, zero LLM.",

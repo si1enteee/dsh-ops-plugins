@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@elinpf/dsh-ops-access-prometheus",
   "version": "0.4.1",
   "description": "Ops access provider for Prometheus — validates prometheus registry entries (server URL + optional bearer-token file) and expands the token path.",

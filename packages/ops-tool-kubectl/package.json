@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@elinpf/dsh-ops-tool-kubectl",
   "version": "0.4.1",
   "description": "kubectl tool consumer of the ops-access seam — resolves k8s profiles into kubeconfig paths and runs kubectl via ctx.shell; list_access surfaces registered profiles without secret fields.",
