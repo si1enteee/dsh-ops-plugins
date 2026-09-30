@@ -43,7 +43,7 @@ agent 通过 `trace` 模型工具维护调查树。每次调用向会话日志�
 
 ## 安装
 
-随 `@elinpf/dsh-ops` 套件 preset 提供（`ops-orchestration` 组，与 ops-prompts 共享 isolate realm)。单独引用时加进 preset 的 `agent.cordis.yml`——注意没有 host 平面的 `@elinpf/dsh-ops-trace-ui`，工具在 UI 里不可见：
+随 `@elinpf/dsh-ops` 套件 preset 提供（`ops-orchestration` 组，与 ops-prompts 共享 isolate realm)。单独引用时加进 preset 的 `ops.patch.yml`——注意没有 host 平面的 `@elinpf/dsh-ops-trace-ui`，工具在 UI 里不可见：
 
 ```yaml
 - id: tool-ops-trace

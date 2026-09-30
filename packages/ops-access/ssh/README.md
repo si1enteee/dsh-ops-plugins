@@ -22,7 +22,7 @@ Registration defers through `ctx.inject(['opsAccess'], ...)` inside `registerAcc
 
 ## Installation
 
-Add to `dsh-web-app` dependencies and reference in the ops preset's `agent.cordis.yml`:
+Add to `dsh-web-app` dependencies and reference in the ops preset's `ops.patch.yml`:
 
 ```yaml
 - id: ops-access-ssh

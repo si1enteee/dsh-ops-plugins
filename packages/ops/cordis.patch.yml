@@ -1,7 +1,8 @@
 # Host-plane rows for the ops suite, mounted when this bundle joins a
 # profile's `dsh.profile.bundles` layer stack. Model-facing rows (tools,
 # prompt content) never live here — they belong to the ops agent preset
-# shipped under presets/ops/.
+# shipped under presets/ops.patch.yml (a declarative @deepseek-ai/dsh-agent-preset
+# row, dsh >= 0.2.0).
 #
 # Plugin names resolve through this package's dependencies (all granular
 # @elinpf/dsh-ops-* packages), so a profile needs no other direct deps.

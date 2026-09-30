@@ -14,7 +14,7 @@ The repo root carries a user-facing README trio (`README.md` / `README.zh.md` / 
 
 ## Packages
 
-- `ops/` (`@elinpf/dsh-ops`) — the single deployment package users install: depends on every granular package, carries the host-plane rows in its `cordis.patch.yml`, ships the `ops` agent preset under `presets/ops/`, and provides the `dsh-ops` bin (`preset install|remove`) that materializes the preset into the agents home. It is never mounted as a plugin row itself.
+- `ops/` (`@elinpf/dsh-ops`) — the single deployment package users install: depends on every granular package, carries the host-plane rows in its `cordis.patch.yml`, ships the `ops` agent preset as `presets/ops.patch.yml` (a declarative `@deepseek-ai/dsh-agent-preset` row, dsh ≥ 0.2.0 — presets are ordinary plugin rows now; the registry neither scans directories nor accepts preset paths). Both patch files are declared in its `dsh.bundle.patch` array and apply when the bundle joins a profile. Its `dsh-ops` bin is a deprecated no-op that fails loudly (`preset install|remove` no longer applies). It is never mounted as a plugin row itself.
 - `ops-access/` — the credential capability seam, split by the three-role rule:
   - `core` (`@elinpf/dsh-ops-access`) — owns the YAML credential registry (default `~/.dsh-ops/access.yaml`) and the `ctx.opsAccess` service; providers register via its `registerAccessProvider(ctx, provider)` helper (never hand-write `ctx.inject` for sibling services — it deadlocks the loader).
   - `k8s` / `ceph` / `ssh` — one provider per credential kind: only a zod schema plus field processing (e.g. `~` expansion). The ssh package registers TWO kinds: `ssh` (host entry) and `ssh-cred` (reusable key/password credential, referenced by hosts via `cred` — core's `references` mechanism merges it at resolve time).
@@ -29,7 +29,7 @@ The repo root carries a user-facing README trio (`README.md` / `README.zh.md` / 
 - `ops-access-ui` — browser half of the `@`-mention access-profile picker; its host row exists only for client-bundle discovery.
 - `test-support` — private, unpublished spec helpers (`./tmpdir`: mkdtemp + afterAll sweep). Test-only workspace dependency; no build, no version cadence.
 
-`ops-preset.yml` at the repo root is the agent-plane composition (the `ops` preset) that mounts these plugins alongside upstream dsh tools.
+`ops-preset.yml` at the repo root is a readable mirror of the agent-plane composition (the `ops` preset). The shipped form is `packages/ops/presets/ops.patch.yml` (same rows wrapped in a `@deepseek-ai/dsh-agent-preset` insert) — keep the two in sync when adding rows.
 
 ## Build and test
 

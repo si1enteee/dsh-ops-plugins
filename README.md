@@ -54,18 +54,12 @@ minimumReleaseAgeExclude:
 
 ## Deployment
 
-1. Materialize the ops preset:
-
-   ```sh
-   npx @elinpf/dsh-ops preset install --agents-home ~/.dsh
-   ```
-
-   The harness discovers user presets under `~/.dsh/.agent-presets/`; without `--agents-home` the preset lands in `~/.agents` and fails silently.
+1. The ops preset ships as a bundle patch and mounts automatically once `@elinpf/dsh-ops` is in the profile's `dsh.profile.bundles` (step 2 of Installation). No extra install step is required — since dsh 0.2.0 a preset is an ordinary `@deepseek-ai/dsh-agent-preset` row; the harness no longer discovers presets from `~/.dsh/.agent-presets/`.
 
 2. Edit `~/.dsh/profiles/ops/cordis.patch.yml`, replacing the top-level array with:
 
    ```yaml
-   - id: agent-presets
+   - id: agent-preset-registry
      config:
        default: ops
    - id: session-reference
@@ -83,7 +77,7 @@ minimumReleaseAgeExclude:
 Verify:
 
 ```sh
-dsh --profile ops --dump-config | grep -A4 'id: agent-presets'      # default should be ops
+dsh --profile ops --dump-config | grep -B2 -A8 'id: preset-ops'     # the ops preset declaration row
 dsh --profile ops --dump-config | grep -A2 'id: session-reference'  # should carry disabled: true
 ```
 
@@ -110,7 +104,7 @@ By default credentials live in a local YAML registry on the dsh host. For a cent
 
    Offline alternative: `--data-dir <dir>` instead of `--url` writes the hub's data file directly.
 
-3. Point ops-access at the hub via the dsh service's **process environment** — this is the upgrade-proof seam. The access core lives in the agent preset plane: the profile's `cordis.patch.yml` only patches the host plane, and the materialized preset file (`~/.dsh/.agent-presets/ops/agent.cordis.yml`) is rewritten by every `preset install`. With systemd:
+3. Point ops-access at the hub via the dsh service's **process environment** — this is the upgrade-proof seam. The access core lives in the agent preset plane: the profile's `cordis.patch.yml` only patches the host plane. With systemd:
 
    ```ini
    # /etc/systemd/system/<your-dsh-unit>.service
@@ -119,7 +113,7 @@ By default credentials live in a local YAML registry on the dsh host. For a cent
    Environment=ACCESS_HUB_ADMIN_TOKEN=<admin token>
    ```
 
-   `ACCESS_HUB_URL` alone flips the source to hub mode; the tokens already had env fallbacks. An explicit `source`/`hubUrl` in the preset's ops-access entry wins over the env when present (useful for temporary experiments — just remember it does not survive `preset install`).
+   `ACCESS_HUB_URL` alone flips the source to hub mode; the tokens already had env fallbacks. An explicit `source`/`hubUrl` in the preset's ops-access entry wins over the env when present (useful for temporary experiments — just remember it is dropped on the next `@elinpf/dsh-ops` upgrade).
 
    Restart the service afterwards. File-field contents are pulled from the hub per resolve and materialized to TTL-bound cache files under `~/.dsh-ops/hub-cache` (mode 0600, swept on expiry and at startup); profiles still carry only paths, and the access gate, probes, admin UI, and tools behave exactly as in YAML mode.
 
@@ -139,33 +133,26 @@ then confirm with the verification steps in the README.
 
 ```sh
 dsh plugin --profile ops add @elinpf/dsh-ops@latest
-npx @elinpf/dsh-ops@latest preset install --agents-home ~/.dsh   # the preset is a file on disk — re-copy it
-dsh --profile ops --no-open                                       # restart
+dsh --profile ops --no-open   # restart; the preset ships in the bundle, no re-copy
 ```
 
-Use `add @latest`, not `update` — `update` does not cross minors. The preset does not refresh with the package; re-materialize it.
+Use `add @latest`, not `update` — `update` does not cross minors. The preset ships as a bundle patch, so it refreshes with the package automatically.
 
 ## Uninstall
 
-1. Remove the preset:
-
-   ```sh
-   npx @elinpf/dsh-ops preset remove --agents-home ~/.dsh
-   ```
-
-2. Remove the package:
+1. Remove the package:
 
    ```sh
    dsh plugin --profile ops remove @elinpf/dsh-ops
    ```
 
-3. Restart the profile:
+2. Restart the profile:
 
    ```sh
    dsh --profile ops --no-open
    ```
 
-4. Optionally delete `~/.dsh-ops/` — the credential registry, environment inventory, and referenced credential files.
+3. Optionally delete `~/.dsh-ops/` — the credential registry, environment inventory, and referenced credential files. (A stale `~/.dsh/.agent-presets/ops/` from an older install can be deleted too.)
 
 Uninstalling never touches your clusters: credentials are read-only references to files you own.
 

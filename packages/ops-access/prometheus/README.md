@@ -13,7 +13,7 @@ One provider per credential kind, per the ops-access three-role split: core owns
 
 ## Installation
 
-Provider row of the ops preset's `agent.cordis.yml`:
+Provider row of the ops preset's `ops.patch.yml`:
 
 ```yaml
 - id: ops-access-prometheus

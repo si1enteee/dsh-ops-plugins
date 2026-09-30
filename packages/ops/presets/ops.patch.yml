@@ -1,7 +1,3 @@
-# READABLE MIRROR of the shipped ops agent preset — the authoritative copy is
-# packages/ops/presets/ops.patch.yml (declared in packages/ops/package.json
-# under dsh.bundle.patch). Keep the two in sync when adding rows.
-
 # Agent preset `ops`, delivered as a declarative @deepseek-ai/dsh-agent-preset
 # row in this bundle's patch layer (dsh >= 0.2.0). The preset registry neither
 # scans directories nor accepts preset paths — a preset is an ordinary plugin

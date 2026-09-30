@@ -37,7 +37,7 @@ preset plane：`ops-orchestration` isolate realm 组内加一行（它消费 `op
     hubToken: <read-token>
 ```
 
-随套件发布的 `ops` preset（`packages/ops/presets/ops/agent.cordis.yml`）已带这一行且无 config，由进程环境变量驱动。
+随套件发布的 `ops` preset（`packages/ops/presets/ops.patch.yml`）已带这一行且无 config，由进程环境变量驱动。
 
 ## 测试
 

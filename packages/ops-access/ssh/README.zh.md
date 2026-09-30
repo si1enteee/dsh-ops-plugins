@@ -22,7 +22,7 @@ ops access 接缝的 SSH provider — 两个凭证种类:`ssh`(主机条目)和 
 
 ## 安装
 
-加入 `dsh-web-app` 依赖,并在 ops preset 的 `agent.cordis.yml` 中引用:
+加入 `dsh-web-app` 依赖,并在 ops preset 的 `ops.patch.yml` 中引用:
 
 ```yaml
 - id: ops-access-ssh

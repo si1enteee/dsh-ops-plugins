@@ -1,8 +1,9 @@
 /**
  * Deployment metadata for the ops suite meta bundle. The package itself is
  * never mounted as a plugin row — its `cordis.patch.yml` carries the
- * host-plane rows and `presets/ops/` the agent preset; the `dsh-ops` bin
- * materializes the preset into the agents home.
+ * host-plane rows and `presets/ops.patch.yml` the agent preset (a declarative
+ * `@deepseek-ai/dsh-agent-preset` row, dsh >= 0.2.0), both applied when the
+ * bundle joins a profile's `dsh.profile.bundles` — there is no copy step.
  * @module @elinpf/dsh-ops
  */
 

@@ -44,7 +44,7 @@ Three just-in-time reminder rules fire on agent pre-step when the tree's hygiene
 
 ## Installation
 
-Shipped in the `@elinpf/dsh-ops` suite preset (`ops-orchestration` group, sharing an isolate realm with ops-prompts). Standalone, reference it in the preset's `agent.cordis.yml` — and remember the tool is invisible in the UI without `@elinpf/dsh-ops-trace-ui` on the host plane:
+Shipped in the `@elinpf/dsh-ops` suite preset (`ops-orchestration` group, sharing an isolate realm with ops-prompts). Standalone, reference it in the preset's `ops.patch.yml` — and remember the tool is invisible in the UI without `@elinpf/dsh-ops-trace-ui` on the host plane:
 
 ```yaml
 - id: tool-ops-trace

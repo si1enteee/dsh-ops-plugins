@@ -54,18 +54,12 @@ minimumReleaseAgeExclude:
 
 ## 部署
 
-1. 落盘 ops 预设：
-
-   ```sh
-   npx @elinpf/dsh-ops preset install --agents-home ~/.dsh
-   ```
-
-   harness 从 `~/.dsh/.agent-presets/` 发现用户预设；不带 `--agents-home` 会装到 `~/.agents`，静默失效。
+1. ops 预设以 bundle patch 形式随包投递：`@elinpf/dsh-ops` 加入 profile 的 `dsh.profile.bundles`（见安装第 2 步）后即自动挂载，无需额外安装步骤——dsh 0.2.0 起预设就是一条普通的 `@deepseek-ai/dsh-agent-preset` 行，harness 不再从 `~/.dsh/.agent-presets/` 发现预设。
 
 2. 编辑 `~/.dsh/profiles/ops/cordis.patch.yml`，把顶层数组改为：
 
    ```yaml
-   - id: agent-presets
+   - id: agent-preset-registry
      config:
        default: ops
    - id: session-reference
@@ -83,7 +77,7 @@ minimumReleaseAgeExclude:
 验证：
 
 ```sh
-dsh --profile ops --dump-config | grep -A4 'id: agent-presets'      # default 应为 ops
+dsh --profile ops --dump-config | grep -B2 -A8 'id: preset-ops'     # ops 预设声明行
 dsh --profile ops --dump-config | grep -A2 'id: session-reference'  # 应带 disabled: true
 ```
 
@@ -110,7 +104,7 @@ dsh --profile ops --dump-config | grep -A2 'id: session-reference'  # 应带 dis
 
    离线方式：用 `--data-dir <dir>` 替代 `--url`，直接写 hub 的数据文件。
 
-3. 通过 dsh 服务的**进程环境变量**把 ops-access 指向 hub——这是升级不丢的接缝。access core 在 agent preset 面：profile 的 `cordis.patch.yml` 只能打 host 面的补丁，而落盘的 preset 文件（`~/.dsh/.agent-presets/ops/agent.cordis.yml`）每次 `preset install` 都会被重写。systemd 场景：
+3. 通过 dsh 服务的**进程环境变量**把 ops-access 指向 hub——这是升级不丢的接缝。access core 在 agent preset 面：profile 的 `cordis.patch.yml` 只能打 host 面的补丁。systemd 场景：
 
    ```ini
    # /etc/systemd/system/<你的-dsh-unit>.service
@@ -119,7 +113,7 @@ dsh --profile ops --dump-config | grep -A2 'id: session-reference'  # 应带 dis
    Environment=ACCESS_HUB_ADMIN_TOKEN=<admin token>
    ```
 
-   只设 `ACCESS_HUB_URL` 即切换到 hub 模式；token 本就支持环境变量兜底。preset 条目里显式写的 `source`/`hubUrl` 优先级高于环境变量（临时实验可用，但 `preset install` 后会被冲掉）。
+   只设 `ACCESS_HUB_URL` 即切换到 hub 模式；token 本就支持环境变量兜底。preset 条目里显式写的 `source`/`hubUrl` 优先级高于环境变量（临时实验可用，但下次升级 `@elinpf/dsh-ops` 时会被覆盖）。
 
    改完重启服务。文件字段内容在 resolve 时按需从 hub 拉取并物化到 `~/.dsh-ops/hub-cache` 下的 TTL 缓存文件（0600，过期与启动时清扫）；profile 仍只携路径，访问门、能力探针、管理 UI、各工具的行为与 YAML 模式完全一致。
 
@@ -139,33 +133,26 @@ dsh --profile ops --dump-config | grep -A2 'id: session-reference'  # 应带 dis
 
 ```sh
 dsh plugin --profile ops add @elinpf/dsh-ops@latest
-npx @elinpf/dsh-ops@latest preset install --agents-home ~/.dsh   # 预设是落盘文件，必须重新拷
-dsh --profile ops --no-open                                       # 重启
+dsh --profile ops --no-open   # 重启；预设随 bundle 投递，无需重新拷
 ```
 
-用 `add @latest` 而不是 `update`——`update` 不跨 minor。预设不随包更新自动刷新，必须重新落盘。
+用 `add @latest` 而不是 `update`——`update` 不跨 minor。预设以 bundle patch 随包投递，升级即自动刷新。
 
 ## 卸载
 
-1. 移除预设：
-
-   ```sh
-   npx @elinpf/dsh-ops preset remove --agents-home ~/.dsh
-   ```
-
-2. 移除插件包：
+1. 移除插件包：
 
    ```sh
    dsh plugin --profile ops remove @elinpf/dsh-ops
    ```
 
-3. 重启 profile：
+2. 重启 profile：
 
    ```sh
    dsh --profile ops --no-open
    ```
 
-4. 按需删除 `~/.dsh-ops/`——凭证登记表、环境清单、被引用的凭证文件。
+3. 按需删除 `~/.dsh-ops/`——凭证登记表、环境清单、被引用的凭证文件。（旧版残留的 `~/.dsh/.agent-presets/ops/` 也可一并删除。）
 
 卸载不影响集群：凭证只是对自有文件的只读引用。
 

@@ -26,7 +26,7 @@ Schemastery `Config`, one field:
 
 ## Installation
 
-Provider row of the ops preset's `agent.cordis.yml`:
+Provider row of the ops preset's `ops.patch.yml`:
 
 ```yaml
 - id: ops-access-ceph

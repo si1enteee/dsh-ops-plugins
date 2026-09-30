@@ -37,7 +37,7 @@ Preset plane: one row inside the `ops-orchestration` isolate realm group (it con
     hubToken: <read-token>
 ```
 
-The shipped `ops` preset (`packages/ops/presets/ops/agent.cordis.yml`) already carries this row without config, driven by the process env.
+The shipped `ops` preset (`packages/ops/presets/ops.patch.yml`) already carries this row without config, driven by the process env.
 
 ## Testing
 

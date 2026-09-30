@@ -13,7 +13,7 @@
 
 ## 安装
 
-ops preset 的 `agent.cordis.yml` 中的 provider 行:
+ops preset 的 `ops.patch.yml` 中的 provider 行:
 
 ```yaml
 - id: ops-access-prometheus
